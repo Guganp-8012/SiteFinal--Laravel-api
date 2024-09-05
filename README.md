@@ -1,2 +1,2 @@
 # SiteFinal--Laravel-api
-Projeto Django com integração de api do Laravel
+Projeto Django com integração de (consumo de) api do Laravel
