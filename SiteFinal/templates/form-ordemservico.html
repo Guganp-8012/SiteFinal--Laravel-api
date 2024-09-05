@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block titulo %}
+    <script src="{% static "js/validacoes_ordemservico.js" %}"></script>
+    <title>Formulário Ordem de Serviço</title>
+{% endblock %}
+
+{% block conteudo %}
+    <a href="{% url "pg_inicial" %}">
+        <button>Voltar</button>
+    </a>
+    <h2>Formulário Ordem de Serviço</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <p>
+            <label for="cliente">Cliente:</label>
+            <select name="cliente_id" id="cliente">
+                {% for cliente in clientes %}
+                    <option value="{{ ordem_servico.cliente.id }}" selected="{{ ordem_servico.cliente.id }}">{{ ordem_servico.cliente.nome }}</option>
+                {% endfor %}
+            </select>
+        </p>
+
+        <p>
+            <label for="servico">Serviço:</label>
+            <select name="servico_id" id="servico">
+                {% for servico in servicos %}
+                    <option value="{{ ordem_servico.servico.id }}" selected="{{ ordem_servico.servico.id }}">{{ ordem_servico.servico.tipo }}</option>
+                {% endfor %}
+            </select>
+        </p>
+
+        <p>
+            <label for="data_inicio">Data Início:</label>
+            <input type="date" name="data_inicio" id="data_inicio" value="{{ ordem_servico.data_inicio }}">
+        </p>
+
+        <p>
+            <label for="data_finalizacao">Data Finalização:</label>
+            <input type="date" name="data_finalizacao" id="data_finalizacao" value="{{ ordem_servico.data_finalizacao }}">
+        </p>
+
+        <p>
+            <label for="status">Status:</label>
+            <select name="status" id="status">
+                <option value="0" {% if ordem_servico.status == 0 %}selected{% endif %}>Em andamento</option>
+                <option value="1" {% if ordem_servico.status == 1 %}selected{% endif %}>Concluído</option>
+            </select>
+        </p>
+
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{% url "pg_inicial" %}">
+            <button type="button" class="btn btn-danger">Cancelar</button>
+        </a>
+    </form>
+
+    <h2>Lista de Ordem de Serviços</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Cliente</th>
+                <th scope="col">Serviço</th>
+                <th scope="col">Data de Início</th>
+                <th scope="col">Data de Finalização</th>
+                <th scope="col">Status</th>
+                <th scope="col">Opções</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for ordem_servico in ordem_servicos %}
+                <tr>
+                    <th scope="row">{{ ordem_servico.id }}</th>
+                    <td>{{ ordem_servico.cliente.nome }}</td>            
+                    <td>{{ ordem_servico.servico.tipo }}</td>
+                    <td>{{ ordem_servico.data_inicio }}</td>
+                    <td>{{ ordem_servico.data_finalizacao }}</td>  
+                    <td>{% if ordem_servico.status == 1 %}
+                            Concluído
+                        {% else %}
+                            Em andamento
+                        {% endif %}
+                    </td>     
+                    <td>
+                        <div class="btns_formulario">
+                            <a href="{% url "pg_editar_ordemservico" ordem_servico.id %}">
+                                <img src="https://img.icons8.com/?size=100&id=12082&format=png&color=000000" height="35" width="35"
+                                data-bs-toggle='tooltip'
+                                title="Editar Ordem de Serviço"
+                                >
+                            </a>
+                            
+                            <a href="{% url "pg_excluir_ordemservico" ordem_servico.id %}">
+                                <img src="https://img.icons8.com/?size=100&id=68064&format=png&color=000000" height="35" width="35"
+                                data-bs-toggle='tooltip'
+                                title="Excluir Ordem de Serviço"
+                                >
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

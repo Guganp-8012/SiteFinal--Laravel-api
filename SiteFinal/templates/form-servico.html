@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block titulo %}
+    <script src="{% static "js/validacoes_servico.js" %}"></script>
+    <title>Formulário Serviço</title>
+{% endblock %}
+
+{% block conteudo %}
+    <a href="{% url "pg_inicial" %}">
+        <button>Voltar</button>
+    </a>
+
+    <a href="{% url "pg_criar_categoria" %}">
+        <button>+ Categoria</button>
+    </a>
+
+    <h2>Formulário Serviço</h2>
+
+    <form method="post" id="form_servico">
+        {% csrf_token %}
+
+        <p>
+            <label for="id_tipo">Tipo servico:</label>
+            <input type="text" name="tipo" maxlength="100" id="tipo" value="{{ servico.tipo }}">
+        </p>
+        
+        <p>
+            <label for="valor">Valor servico:</label>
+            <input type="number" name="valor" step="0.01" id="valor" value="{{ servico.valor }}">
+        </p>
+               
+        <p>
+            <label for="id_empresa">Empresa:</label>
+            <select name="empresa_id" id="empresa">
+                {% for empresa in empresas %}
+                    <option value="{{ servico.empresa.id }}" selected="{{ servico.empresa.id }}">{{ servico.empresa.razao_social }}</option>
+                {% endfor %}
+            </select>
+        </p>
+              
+        <p>
+            <label for="id_categoria">Categoria:</label>
+            <select name="categoria_id" id="categoria">
+                {% for categoria in categorias %}
+                    <option value="{{ servico.categoria.id }}" selected="{{ servico.categoria.id }}">{{ servico.categoria.tipo }}</option>
+                {% endfor %}
+            </select>
+        </p>
+
+        <button type="submit" id="salvar" class="btn btn-primary">Salvar</button>
+
+        <a href="{% url "pg_inicial" %}"><button type="button" class="btn btn-danger">Cancelar</button></a>
+    </form>    
+
+    <h2>Lista de Serviços</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Valor</th>
+                <th scope="col">Empresa</th>
+                <th scope="col">Categoria</th>
+                <th scope="col">Opções</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for servico in servicos %}
+                <tr>
+                    <th scope="row">{{ servico.id }}</th>
+                    <td>{{ servico.tipo }}</td>            
+                    <td>R${{ servico.valor }}</td>
+                    <td>{{ servico.empresa.razao_social }}</td>
+                    <td>{{ servico.categoria.tipo }}</td>     
+                    <td>
+                        <div class="btns_formulario">
+                            <a href="{% url "pg_editar_servico" servico.id %}">
+                                <img src="https://img.icons8.com/?size=100&id=12082&format=png&color=000000" height="35" width="35"
+                                data-bs-toggle='tooltip'
+                                title="Editar Serviço"
+                                >
+                            </a>
+                            
+                            <a href="{% url "pg_excluir_servico" servico.id %}">
+                                <img src="https://img.icons8.com/?size=100&id=68064&format=png&color=000000" height="35" width="35"
+                                data-bs-toggle='tooltip'
+                                title="Excluir Serviço"
+                                >
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

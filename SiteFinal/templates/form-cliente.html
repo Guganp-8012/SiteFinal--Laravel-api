@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block titulo %}
+    <script src="{% static "js/validacoes_cliente.js" %}"></script>
+    <title>Formulário Cliente</title>
+{% endblock %}
+
+{% block conteudo %}
+    <a href="{% url "pg_inicial" %}">
+        <button>Voltar</button>
+    </a>
+
+    <h2>Formulário Cliente</h2>
+
+    <form method="post" id="form_cliente" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>
+            <label for="id_nome">Nome:</label>
+            <input type="text" name="nome" maxlength="100" required="" id="nome" value="{{ cliente.nome }}">
+        </p>
+
+        <p>
+            <label for="data_nascimento">Data de nascimento:</label>
+            <input type="date" name="data_nascimento" maxlength="100" required="" id="data_nascimento" value="{{ cliente.data_nascimento }}"> 
+        </p>
+
+        <p>
+            <label for="id_cliente">Foto:</label>
+            <input type="file" name="foto">
+        </p>
+
+        {% if cliente %}
+        <p>
+            <label for="status">Status:</label>
+            <select name="status" id="status">
+                <option value="1" {% if cliente.status == 1 %}selected{% endif %}>Ativo</option>
+                <option value="0" {% if cliente.status == 0 %}selected{% endif %}>Inativo</option>
+            </select>
+        </p>
+        {% endif %}
+
+        <p>
+            <img src="{{ foto }}"> 
+        </p>
+
+        <button type="submit" id="salvar" class="btn btn-primary">Salvar</button>
+
+        <a href="{% url "pg_criar_servico" %}">
+            <button type="button" class="btn btn-danger">Cancelar</button>
+        </a>
+    </form>
+
+    <h2>Lista de Clientes</h2>               
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Data de nascimento</th>
+                <th scope="col">Foto</th>
+                <th scope="col">Status</th>
+                <th scope="col">Opções</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for cliente in clientes %}
+                <tr>
+                    <th scope="row">{{ cliente.id }}</th>
+                    <td>{{ cliente.nome }}</td>           
+                    <td>{{ cliente.data_nascimento }}</td>
+                    <td>{{ cliente.foto }}</td>
+                    <td>{% if cliente.status == 1 %}
+                        Ativo
+                    {% else %}
+                        Desativado
+                    {% endif %}
+                </td>  
+                    <td>
+                        <div class="btns_formulario">
+                            <a href="{% url "pg_editar_cliente" cliente.id %}">
+                                <img src="https://img.icons8.com/?size=100&id=12082&format=png&color=000000" height="35" width="35"
+                                data-bs-toggle='tooltip'
+                                title="Editar Cliente"
+                                >
+                            </a>
+                            
+                            <a href="{% url "pg_excluir_cliente" cliente.id %}">
+                                <img src="https://img.icons8.com/?size=100&id=68064&format=png&color=000000" height="35" width="35"
+                                data-bs-toggle='tooltip'
+                                title="Excluir Cliente"
+                                >
+                            </a>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

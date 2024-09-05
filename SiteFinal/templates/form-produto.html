@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block titulo %}
+    <script src="{% static "js/validacoes_produto.js" %}"></script>
+    <title>Formulário Produto</title>
+{% endblock %}
+
+{% block conteudo %}
+    <a href="{% url "pg_inicial" %}">
+        <button>Voltar</button>
+    </a>
+    
+    <h2>Formulário Produto</h2>
+
+    <form method="post" id="form_produto">
+        {% csrf_token %}
+        <p>
+            <label for="id_nome">Nome:</label>
+            <input type="text" name="nome" maxlength="100" id="nome" value="{{ produto.nome }}">
+        </p>
+
+        <p>
+            <label for="id_valor">Valor:</label>
+            <input type="text" name="valor" maxlength="100"  id="valor" value="{{ produto.valor }}">
+        </p>
+
+        <p>
+            <label for="id_descricao">Descrição:</label>
+            <input type="text" name="descricao" maxlength="100" id="descricao" value="{{ produto.descricao }}"> 
+        </p>
+
+        <button type="submit" id="salvar" class="btn btn-primary">Salvar</button>
+
+        <a href="{% url "pg_criar_servico" %}"><button type="button" class="btn btn-danger">Cancelar</button></a>
+    </form>
+
+    <h2>Lista de Produtos</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Valor</th>
+                <th scope="col">Descrição</th>
+                <th scope="col">Opções</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for produto in produtos %}
+                <tr>
+                    <th scope="row">{{ produto.id }}</th>
+                    <td>{{ produto.nome }}</td> 
+                    <td>R${{ produto.valor }}</td> 
+                    <td>{{ produto.descricao }}</td> 
+                    <td>
+                        <div class="btns_formulario">
+                            <a href="{% url "pg_editar_produto" produto.id %}">
+                                <img src="https://img.icons8.com/?size=100&id=12082&format=png&color=000000" height="35" width="35"
+                                data-bs-toggle='tooltip'
+                                title="Editar Produto"
+                                >
+                            </a>
+                            
+                            <a href="{% url "pg_excluir_produto" produto.id %}">
+                                <img src="https://img.icons8.com/?size=100&id=68064&format=png&color=000000" height="35" width="35"
+                                data-bs-toggle='tooltip'
+                                title="Excluir Produto"
+                                >
+                            </a>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
